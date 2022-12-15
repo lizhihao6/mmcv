@@ -1867,3 +1867,27 @@ REGISTER_DEVICE_IMPL(prroi_pool_forward_impl, CUDA, prroi_pool_forward_cuda);
 REGISTER_DEVICE_IMPL(prroi_pool_backward_impl, CUDA, prroi_pool_backward_cuda);
 REGISTER_DEVICE_IMPL(prroi_pool_coor_backward_impl, CUDA,
                      prroi_pool_coor_backward_cuda);
+
+void NATTENAVCUDAKernelLauncher(const Tensor attn, const Tensor value,
+                                 const Tensor output);
+
+void nattenav_cuda(const Tensor attn, const Tensor value, Tensor output) {
+  NATTENAVCUDAKernelLauncher(attn, value, output);
+}
+
+void nattenav_impl(const Tensor attn, const Tensor value, Tensor output);
+
+REGISTER_DEVICE_IMPL(nattenav_impl, CUDA, nattenav_cuda);
+
+void NATTENQKRPBCUDAKernelLauncher(const Tensor query, const Tensor key,
+                                   const Tensor rpb, const Tensor output);
+
+void nattenqkrpb_cuda(const Tensor query, const Tensor key, const Tensor rpb,
+                      Tensor output) {
+  NATTENQKRPBCUDAKernelLauncher(query, key, rpb, output);
+}
+
+void nattenqkrpb_impl(const Tensor query, const Tensor key, const Tensor rpb,
+                      Tensor output);
+
+REGISTER_DEVICE_IMPL(nattenqkrpb_impl, CUDA, nattenqkrpb_cuda);
