@@ -18,7 +18,7 @@
 #include <ATen/native/cuda/KernelUtils.cuh>
 #include <ATen/AccumulateType.h>
 #include <cuda_fp16.h>
-#include "natten_commons.cuh"
+#include "nattenav_cuda_kernel.cuh"
 
 /*
 Beware: here be dragons! Edit with caution.
