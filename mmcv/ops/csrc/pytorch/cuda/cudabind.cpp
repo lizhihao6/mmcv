@@ -1877,7 +1877,8 @@ Tensor nattenav_forward_cuda(const Tensor attn, const Tensor value) {
 Tensor nattenav_forward_impl(const Tensor attn, const Tensor value);
 
 std::vector<Tensor> NATTENAVBackwardCUDAKernelLauncher(const Tensor grad_output,
-                                                       const Tensor attn);
+                                                       const Tensor attn,
+                                                       const Tensor value);
 
 std::vector<Tensor> nattenav_backward_cuda(const Tensor grad_output,
                                            const Tensor attn,
