@@ -459,6 +459,11 @@ std::vector<Tensor> nattenqkrpb_backward(const Tensor grad_output,
                                          const Tensor query,
                                          const Tensor key);
 
+#include <utils/rans/rans_inference.hpp>
+BufferedRansEncoder buffered_rans_encoder(const Tensor device_signatures);
+RansEncoder rans_encoder(const Tensor device_signatures);
+RansDecoder rans_decoder(const Tensor device_signatures);
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("upfirdn2d", &upfirdn2d, "upfirdn2d (CUDA)", py::arg("input"),
         py::arg("kernel"), py::arg("up_x"), py::arg("up_y"), py::arg("down_x"),
@@ -920,4 +925,20 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
         py::arg("query"), py::arg("key"), py::arg("rpb"));
   m.def("nattenqkrpb_backward", &nattenqkrpb_backward, "nattenqkrpb_backward",
         py::arg("grad_output"), py::arg("query"), py::arg("key"));
+
+  py::class_<BufferedRansEncoder>(m, "BufferedRansEncoder")
+      .def(py::init<>())
+      .def("encode_with_indexes", &BufferedRansEncoder::encode_with_indexes)
+      .def("flush", &BufferedRansEncoder::flush);
+
+  py::class_<RansEncoder>(m, "RansEncoder")
+      .def(py::init<>())
+      .def("encode_with_indexes", &RansEncoder::encode_with_indexes);
+
+  py::class_<RansDecoder>(m, "RansDecoder")
+      .def(py::init<>())
+      .def("set_stream", &RansDecoder::set_stream)
+      .def("decode_stream", &RansDecoder::decode_stream)
+      .def("decode_with_indexes", &RansDecoder::decode_with_indexes,
+           "Decode a string to a list of symbols");
 }
