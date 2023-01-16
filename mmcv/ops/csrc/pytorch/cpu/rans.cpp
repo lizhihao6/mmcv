@@ -362,25 +362,3 @@ RansDecoder::decode_stream(const std::vector<int32_t> &indexes,
 
   return output;
 }
-
-BufferedRansEncoder buffered_rans_enc_cpu(const Tensor device_signatures){
-    encoder = BufferedRansEncoder();
-    return encoder;
-}
-BufferedRansEncoder buffered_rans_enc_impl(const Tensor device_signatures);
-
-RansEncoder rans_enc_cpu(const Tensor device_signatures){
-    encoder = RansEncoder();
-    return encoder;
-}
-RansEncoder rans_enc_impl(const Tensor device_signatures);
-
-RansDecoder rans_dec_cpu(const Tensor device_signatures){
-    decoder = RansDecoder();
-    return decoder;
-}
-RansDecoder rans_dec_impl(const Tensor device_signatures);
-
-REGISTER_DEVICE_IMPL(buffered_rans_enc_impl, CPU, buffered_rans_enc_cpu);
-REGISTER_DEVICE_IMPL(rans_enc_impl, CPU, rans_enc_cpu);
-REGISTER_DEVICE_IMPL(rans_dec_impl, CPU, rans_dec_impl);

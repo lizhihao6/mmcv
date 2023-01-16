@@ -460,9 +460,6 @@ std::vector<Tensor> nattenqkrpb_backward(const Tensor grad_output,
                                          const Tensor key);
 
 #include <utils/rans/rans_inference.hpp>
-BufferedRansEncoder buffered_rans_encoder(const Tensor device_signatures);
-RansEncoder rans_encoder(const Tensor device_signatures);
-RansDecoder rans_decoder(const Tensor device_signatures);
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("upfirdn2d", &upfirdn2d, "upfirdn2d (CUDA)", py::arg("input"),

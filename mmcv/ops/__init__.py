@@ -51,6 +51,7 @@ from .points_in_polygons import points_in_polygons
 from .points_sampler import PointsSampler
 from .prroi_pool import PrRoIPool, prroi_pool
 from .psa_mask import PSAMask
+from .rans import BufferedRansEncoder, RansDecoder, RansEncoder
 from .riroi_align_rotated import RiRoIAlignRotated, riroi_align_rotated
 from .roi_align import RoIAlign, roi_align
 from .roi_align_rotated import RoIAlignRotated, roi_align_rotated
@@ -106,7 +107,8 @@ __all__ = [
     'points_in_boxes_cpu', 'points_in_boxes_all', 'points_in_polygons',
     'min_area_polygons', 'active_rotated_filter', 'convex_iou', 'convex_giou',
     'diff_iou_rotated_2d', 'diff_iou_rotated_3d', 'chamfer_distance',
-    'PrRoIPool', 'prroi_pool', 'NeighborhoodAttention'
+    'PrRoIPool', 'prroi_pool', 'NeighborhoodAttention', 'RansEncoder',
+    'RansDecoder', 'BufferedRansEncoder'
 ]
 
 if IS_MLU_AVAILABLE:
