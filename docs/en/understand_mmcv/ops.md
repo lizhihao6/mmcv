@@ -3,7 +3,7 @@
 We implement common ops used in detection, segmentation, etc.
 
 | Device                       | CPU | CUDA | MLU | MPS | Ascend |
-| ---------------------------- | --- | ---- | --- | --- | ------ |
+| ---------------------------- | --- | ---- | --- | --- |--------|
 | ActiveRotatedFilter          | √   | √    |     |     |        |
 | AssignScoreWithK             |     | √    |     |     |        |
 | BallQuery                    |     | √    |     |     |        |
@@ -60,3 +60,4 @@ We implement common ops used in detection, segmentation, etc.
 | UpFirDn2d                    |     | √    |     |     |        |
 | Voxelization                 | √   | √    | √   |     |        |
 | PrRoIPool                    |     | √    |     |     |        |
+| NeighborhoodAttention        |     | √    |     |     |        |
