@@ -3,7 +3,7 @@
 We implement common ops used in detection, segmentation, etc.
 
 | Device                       | CPU | CUDA | MLU | MPS | NPU |
-| ---------------------------- | --- | ---- | --- | --- | --- |
+|------------------------------| --- | ---- | --- | --- | --- |
 | ActiveRotatedFilter          | √   | √    |     |     |     |
 | AssignScoreWithK             |     | √    |     |     |     |
 | BallQuery                    |     | √    |     |     |     |
@@ -60,5 +60,4 @@ We implement common ops used in detection, segmentation, etc.
 | UpFirDn2d                    |     | √    |     |     |     |
 | Voxelization                 | √   | √    |     |     |     |
 | PrRoIPool                    |     | √    |     |     |     |
-| NATTENAVFunction             |     | √    |     |     |     |
-| NATTENQKRPBFunction          |     | √    |     |     |     |
+| NeighborhoodAttention        |     | √    |     |     |     |

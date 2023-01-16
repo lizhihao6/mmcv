@@ -1868,26 +1868,54 @@ REGISTER_DEVICE_IMPL(prroi_pool_backward_impl, CUDA, prroi_pool_backward_cuda);
 REGISTER_DEVICE_IMPL(prroi_pool_coor_backward_impl, CUDA,
                      prroi_pool_coor_backward_cuda);
 
-void NATTENAVCUDAKernelLauncher(const Tensor attn, const Tensor value,
-                                 const Tensor output);
+Tensor NATTENAVForwardCUDAKernelLauncher(const Tensor attn, const Tensor value);
 
-void nattenav_cuda(const Tensor attn, const Tensor value, Tensor output) {
-  NATTENAVCUDAKernelLauncher(attn, value, output);
+Tensor nattenav_forward_cuda(const Tensor attn, const Tensor value) {
+  return NATTENAVForwardCUDAKernelLauncher(attn, value);
 }
 
-void nattenav_impl(const Tensor attn, const Tensor value, Tensor output);
+Tensor nattenav_forward_impl(const Tensor attn, const Tensor value);
 
-REGISTER_DEVICE_IMPL(nattenav_impl, CUDA, nattenav_cuda);
+std::vector<Tensor> NATTENAVBackwardCUDAKernelLauncher(const Tensor grad_output,
+                                                       const Tensor attn);
 
-void NATTENQKRPBCUDAKernelLauncher(const Tensor query, const Tensor key,
-                                   const Tensor rpb, const Tensor output);
-
-void nattenqkrpb_cuda(const Tensor query, const Tensor key, const Tensor rpb,
-                      Tensor output) {
-  NATTENQKRPBCUDAKernelLauncher(query, key, rpb, output);
+std::vector<Tensor> nattenav_backward_cuda(const Tensor grad_output,
+                                           const Tensor attn,
+                                           const Tensor value) {
+  return NATTENAVBackwardCUDAKernelLauncher(grad_output, attn, value);
 }
 
-void nattenqkrpb_impl(const Tensor query, const Tensor key, const Tensor rpb,
-                      Tensor output);
+std::vector<Tensor> nattenav_backward_impl(const Tensor grad_output,
+                                           const Tensor attn,
+                                           const Tensor value);
 
-REGISTER_DEVICE_IMPL(nattenqkrpb_impl, CUDA, nattenqkrpb_cuda);
+REGISTER_DEVICE_IMPL(nattenav_forward_impl, CUDA, nattenav_forward_cuda);
+REGISTER_DEVICE_IMPL(nattenav_backward_impl, CUDA, nattenav_backward_cuda);
+
+Tensor NATTENQKRPBForwardCUDAKernelLauncher(const Tensor query,
+                                            const Tensor key,
+                                            const Tensor rpb);
+
+Tensor nattenqkrpb_forward_cuda(const Tensor query, const Tensor key,
+                                const Tensor rpb) {
+  return NATTENQKRPBForwardCUDAKernelLauncher(query, key, rpb);
+}
+
+Tensor nattenqkrpb_forward_impl(const Tensor query, const Tensor key, const Tensor rpb);
+
+std::vector<Tensor> NATTENQKRPBBackwardCUDAKernelLauncher(const Tensor grad_output,
+                                                          const Tensor query,
+                                                          const Tensor key);
+
+std::vector<Tensor> nattenqkrpb_backward_cuda(const Tensor grad_output,
+                                              const Tensor query,
+                                              const Tensor key) {
+  return NATTENQKRPBBackwardCUDAKernelLauncher(grad_output, query, key);
+}
+
+std::vector<Tensor> nattenqkrpb_backward_impl(const Tensor grad_output,
+                                              const Tensor query,
+                                              const Tensor key);
+
+REGISTER_DEVICE_IMPL(nattenqkrpb_forward_impl, CUDA, nattenqkrpb_forward_cuda);
+REGISTER_DEVICE_IMPL(nattenqkrpb_backward_impl, CUDA, nattenqkrpb_backward_cuda);

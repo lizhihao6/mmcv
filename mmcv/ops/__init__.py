@@ -39,6 +39,7 @@ from .modulated_deform_conv import (ModulatedDeformConv2d,
                                     ModulatedDeformConv2dPack,
                                     modulated_deform_conv2d)
 from .multi_scale_deform_attn import MultiScaleDeformableAttention
+from .neighborhood_attention import NeighborhoodAttention
 from .nms import batched_nms, nms, nms_match, nms_quadri, nms_rotated, soft_nms
 from .pixel_group import pixel_group
 from .point_sample import (SimpleRoIAlign, point_sample,
@@ -104,5 +105,5 @@ __all__ = [
     'points_in_boxes_cpu', 'points_in_boxes_all', 'points_in_polygons',
     'min_area_polygons', 'active_rotated_filter', 'convex_iou', 'convex_giou',
     'diff_iou_rotated_2d', 'diff_iou_rotated_3d', 'chamfer_distance',
-    'PrRoIPool', 'prroi_pool'
+    'PrRoIPool', 'prroi_pool', 'NeighborhoodAttention'
 ]

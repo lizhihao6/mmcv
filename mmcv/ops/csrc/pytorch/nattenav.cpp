@@ -2,10 +2,22 @@
 #include "pytorch_cpp_helper.hpp"
 #include "pytorch_device_registry.hpp"
 
-void nattenav_impl(const Tensor attn, const Tensor value, Tensor output) {
-  DISPATCH_DEVICE_IMPL(nattenav_impl, attn, value, output);
+Tensor nattenav_forward_impl(const Tensor attn, const Tensor value) {
+  return DISPATCH_DEVICE_IMPL(nattenav_forward_impl, attn, value);
 }
 
-void nattenav(const Tensor attn, const Tensor value, Tensor output) {
-  nattenav_impl(attn, value, output);
+Tensor nattenav_forward(const Tensor attn, const Tensor value) {
+  return nattenav_forward_impl(attn, value);
+}
+
+std::vector<Tensor> nattenav_backward_impl(const Tensor grad_output,
+                                           const Tensor attn,
+                                           const Tensor value) {
+  return DISPATCH_DEVICE_IMPL(nattenav_backward_impl, grad_output, attn, value);
+}
+
+std::vector<Tensor> nattenav_backward(const Tensor grad_output,
+                                      const Tensor attn,
+                                      const Tensor value) {
+  return nattenav_backward_impl(grad_output, attn, value);
 }
