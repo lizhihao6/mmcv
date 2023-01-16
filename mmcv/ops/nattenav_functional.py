@@ -3,13 +3,15 @@ from torch.autograd import Function
 
 from ..utils import ext_loader
 
-ext_module = ext_loader.load_ext('_ext', ['nattenav_forward', 'nattenav_backward'])
+ext_module = ext_loader.load_ext('_ext', ['nattenav_forward',
+                                          'nattenav_backward'])
 
 
 class NATTENAVFunction(Function):
     """
     AV autograd function
-    Computes neighborhood attention outputs given attention weights, and values.
+    Computes neighborhood attention outputs given attention weights,
+    and values.
     This calls the `AV` kernel.
     """
 
@@ -17,7 +19,7 @@ class NATTENAVFunction(Function):
     def forward(ctx, attn, value):
         attn = attn.contiguous()
         value = value.contiguous()
-        out = nattenav_forward(
+        out = ext_module.nattenav_forward(
             attn,
             value)
         ctx.save_for_backward(attn, value)
@@ -25,8 +27,10 @@ class NATTENAVFunction(Function):
 
     @staticmethod
     def backward(ctx, grad_out):
-        outputs = nattenav_backward(
-            grad_out.contiguous(), ctx.saved_variables[0], ctx.saved_variables[1])
+        outputs = ext_module.nattenav_backward(
+            grad_out.contiguous(),
+            ctx.saved_variables[0],
+            ctx.saved_variables[1])
         d_attn, d_value = outputs
         return d_attn, d_value, None
 

@@ -3,9 +3,9 @@ import torch
 from torch import nn
 from torch.nn.functional import pad
 
+from ..cnn.utils.weight_init import trunc_normal_
 from .nattenav_functional import nattenav
 from .nattenqkrpb_functional import nattenqkrpb
-from ..cnn.utils.weight_init import trunc_normal_
 
 
 class NeighborhoodAttention(nn.Module):
@@ -20,9 +20,11 @@ class NeighborhoodAttention(nn.Module):
         self.head_dim = dim // self.num_heads
         self.scale = qk_scale or self.head_dim ** -0.5
         assert kernel_size > 1 and kernel_size % 2 == 1, \
-            f"Kernel size must be an odd number greater than 1, got {kernel_size}."
+            f"Kernel size must be an odd number greater than 1," \
+            f" got {kernel_size}."
         assert kernel_size in [3, 5, 7, 9, 11, 13], \
-            f"CUDA kernel only supports kernel sizes 3, 5, 7, 9, 11, and 13; got {kernel_size}."
+            f"CUDA kernel only supports kernel sizes" \
+            f" 3, 5, 7, 9, 11, and 13; got {kernel_size}."
         self.kernel_size = kernel_size
 
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)

@@ -7,14 +7,15 @@ import torch
 
 from mmcv.ops import NeighborhoodAttention
 
+
 def _priv_test_allclose_cpu_cuda(
-    batch_size,
-    height,
-    width,
-    kernel_sizes=[3, 5, 7, 9],
-    dims=[4, 8],
-    heads=[1, 2, 3],
-    tol=1e-8,
+        batch_size,
+        height,
+        width,
+        kernel_sizes=[3, 5, 7, 9],
+        dims=[4, 8],
+        heads=[1, 2, 3],
+        tol=1e-8,
 ):
     for kernel_size in kernel_sizes:
         for dim in dims:
@@ -31,7 +32,8 @@ def _priv_test_allclose_cpu_cuda(
                         **model_kwargs
                     ).state_dict()
 
-                    x1 = torch.randn((batch_size, height, width, dim * num_heads))
+                    x1 = torch.randn((batch_size, height, width,
+                                      dim * num_heads))
                     x2 = x1.clone().detach().cuda(0)
 
                     nat1 = NeighborhoodAttention(**model_kwargs).eval()
@@ -46,7 +48,8 @@ def _priv_test_allclose_cpu_cuda(
                     forward_mse = ((y1.data - y2.cpu().data) ** 2).mean()
 
                     assert forward_mse < tol, (
-                        f"FAIL: Forward MSE ({forward_mse}) was above the specified"
+                        f"FAIL: Forward MSE ({forward_mse})"
+                        f" was above the specified"
                         f" tolerance (tol) for heads={heads}, dim={dim},"
                         f" kernel_size={kernel_size}."
                     )
@@ -60,24 +63,30 @@ def _priv_test_allclose_cpu_cuda(
                         for name2, n2w in nat2.named_modules():
                             if name != name2:
                                 continue
-                            if n1w.weight.grad is None or n2w.weight.grad is None:
+                            if n1w.weight.grad is None \
+                                    or n2w.weight.grad is None:
                                 continue
                             mse = (
-                                (n1w.weight.grad - n2w.weight.grad.cpu()) ** 2
+                                    (n1w.weight.grad
+                                     - n2w.weight.grad.cpu()) ** 2
                             ).mean()
                             if hasattr(n1w, "bias") and n1w.bias is not None:
                                 if hasattr(n1w.bias, "grad") and hasattr(
-                                    n2w.bias, "grad"
+                                        n2w.bias, "grad"
                                 ):
                                     mse += (
-                                        (n1w.bias.grad - n2w.bias.grad.cpu()) ** 2
+                                            (n1w.bias.grad
+                                             - n2w.bias.grad.cpu()) ** 2
                                     ).mean()
 
                             assert mse < tol, (
-                                f"FAIL: {name} gradient MSE ({mse}) was above the"
-                                f" specified tolerance ({tol}) for heads={heads},"
+                                f"FAIL: {name} gradient"
+                                f" MSE ({mse}) was above the"
+                                f" specified tolerance"
+                                f" ({tol}) for heads={heads},"
                                 f" dim={dim}, kernel_size={kernel_size}."
                             )
+
 
 @pytest.mark.parametrize('device', [
     pytest.param(
