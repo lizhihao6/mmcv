@@ -1320,9 +1320,9 @@ std::vector<torch::Tensor> nattenqkrpb_cuda_backward_fp16(
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
 
 torch::Tensor NATTENQKRPBForwardCUDAKernelLauncher(
-    const torch::Tensor &query,
-    const torch::Tensor &key,
-    const torch::Tensor &rpb) {
+    const torch::Tensor query,
+    const torch::Tensor key,
+    const torch::Tensor rpb) {
     CHECK_INPUT(query);
     CHECK_INPUT(key);
     CHECK_INPUT(rpb);
@@ -1340,9 +1340,9 @@ torch::Tensor NATTENQKRPBForwardCUDAKernelLauncher(
 }
 
 std::vector<torch::Tensor> NATTENQKRPBBackwardCUDAKernelLauncher(
-    const torch::Tensor &d_attn,
-    const torch::Tensor &query,
-    const torch::Tensor &key) {
+    const torch::Tensor d_attn,
+    const torch::Tensor query,
+    const torch::Tensor key) {
     CHECK_INPUT(d_attn);
     CHECK_INPUT(query);
     CHECK_INPUT(key);
