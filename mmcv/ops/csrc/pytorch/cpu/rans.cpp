@@ -33,7 +33,7 @@
 #include "pytorch_cpp_helper.hpp"
 #include "pytorch_device_registry.hpp"
 
-#include <utils/rans/rans_interface.h>
+#include <utils/rans/rans_interface.hpp>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
