@@ -1,7 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch
 from torch.autograd import Function
-from torch.cuda.amp import custom_fwd, custom_bwd
 
 from ..utils import ext_loader
 
@@ -16,7 +14,6 @@ class NATTENAVFunction(Function):
     """
 
     @staticmethod
-    @custom_fwd(cast_inputs=torch.float16)
     def forward(ctx, attn, value):
         attn = attn.contiguous()
         value = value.contiguous()
@@ -27,7 +24,6 @@ class NATTENAVFunction(Function):
         return out
 
     @staticmethod
-    @custom_bwd
     def backward(ctx, grad_out):
         outputs = nattenav_backward(
             grad_out.contiguous(), ctx.saved_variables[0], ctx.saved_variables[1])

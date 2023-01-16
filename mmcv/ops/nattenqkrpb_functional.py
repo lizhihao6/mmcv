@@ -1,11 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch
 from torch.autograd import Function
-from torch.cuda.amp import custom_fwd, custom_bwd
 
 from ..utils import ext_loader
 
-ext_module = ext_loader.load_ext('_ext', ['nattenav_forward', 'nattenav_backward'])
+ext_module = ext_loader.load_ext('_ext', ['nattenqkrpb_forward', 'nattenqkrpb_backward'])
 
 
 class NATTENQKRPBFunction(Function):
@@ -17,11 +15,10 @@ class NATTENQKRPBFunction(Function):
     """
 
     @staticmethod
-    @custom_fwd(cast_inputs=torch.float16)
     def forward(ctx, query, key, rpb):
         query = query.contiguous()
         key = key.contiguous()
-        attn = nattenqkrpb_cuda.forward(
+        attn = nattenqkrpb_forward(
             query,
             key,
             rpb)
@@ -29,9 +26,8 @@ class NATTENQKRPBFunction(Function):
         return attn
 
     @staticmethod
-    @custom_bwd
     def backward(ctx, grad_out):
-        outputs = nattenqkrpb_cuda.backward(
+        outputs = nattenqkrpb_backward(
             grad_out.contiguous(), ctx.saved_variables[0], ctx.saved_variables[1])
         d_query, d_key, d_rpb = outputs
         return d_query, d_key, d_rpb, None
