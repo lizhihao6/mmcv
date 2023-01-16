@@ -1235,8 +1235,8 @@ std::vector<torch::Tensor> nattenav_cuda_backward_fp16(
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
 
 torch::Tensor NATTENAVForwardCUDAKernelLauncher(
-    const torch::Tensor &attn,
-    const torch::Tensor &value) {
+    const torch::Tensor attn,
+    const torch::Tensor value) {
     CHECK_INPUT(attn);
     CHECK_INPUT(value);
     bool half = ::detail::scalar_type(value.scalar_type()) == at::ScalarType::Half;
@@ -1246,9 +1246,9 @@ torch::Tensor NATTENAVForwardCUDAKernelLauncher(
 }
 
 std::vector<torch::Tensor> NATTENAVBackwardCUDAKernelLauncher(
-    const torch::Tensor &d_out,
-    const torch::Tensor &attn,
-    const torch::Tensor &value) {
+    const torch::Tensor d_out,
+    const torch::Tensor attn,
+    const torch::Tensor value) {
     CHECK_INPUT(d_out);
     CHECK_INPUT(attn);
     CHECK_INPUT(value);
