@@ -3,11 +3,11 @@
 We implement common ops used in detection, segmentation, etc.
 
 | Device                       | CPU | CUDA | MLU | MPS | Ascend |
-| ---------------------------- | --- | ---- | --- | --- |--------|
+| ---------------------------- | --- | ---- | --- | --- | ------ |
 | ActiveRotatedFilter          | √   | √    |     |     |        |
 | AssignScoreWithK             |     | √    |     |     |        |
 | BallQuery                    |     | √    |     |     |        |
-| BBoxOverlaps                 |     | √    | √   | √   |        |
+| BBoxOverlaps                 |     | √    | √   | √   | √      |
 | BorderAlign                  |     | √    |     |     |        |
 | BoxIouRotated                | √   | √    |     |     |        |
 | BoxIouQuadri                 | √   | √    |     |     |        |
@@ -18,24 +18,24 @@ We implement common ops used in detection, segmentation, etc.
 | ConvexIoU                    |     | √    |     |     |        |
 | CornerPool                   |     | √    |     |     |        |
 | Correlation                  |     | √    |     |     |        |
-| Deformable Convolution v1/v2 | √   | √    | √   |     | √      |
+| Deformable Convolution v1/v2 | √   | √    |     |     | √      |
 | Deformable RoIPool           |     | √    | √   |     | √      |
 | DiffIoURotated               |     | √    |     |     |        |
 | DynamicScatter               |     | √    |     |     |        |
 | FurthestPointSample          |     | √    |     |     |        |
 | FurthestPointSampleWithDist  |     | √    |     |     |        |
 | FusedBiasLeakyrelu           |     | √    |     |     | √      |
-| GatherPoints                 |     | √    |     |     |        |
+| GatherPoints                 |     | √    |     |     | √      |
 | GroupPoints                  |     | √    |     |     |        |
 | Iou3d                        |     | √    | √   |     |        |
 | KNN                          |     | √    |     |     |        |
 | MaskedConv                   |     | √    | √   |     | √      |
 | MergeCells                   |     | √    |     |     |        |
 | MinAreaPolygon               |     | √    |     |     |        |
-| ModulatedDeformConv2d        | √   | √    | √   |     | √      |
+| ModulatedDeformConv2d        | √   | √    |     |     | √      |
 | MultiScaleDeformableAttn     |     | √    | √   |     |        |
 | NMS                          | √   | √    | √   |     | √      |
-| NMSRotated                   | √   | √    |     |     |        |
+| NMSRotated                   | √   | √    |     |     | √      |
 | NMSQuadri                    | √   | √    |     |     |        |
 | PixelGroup                   | √   |      |     |     |        |
 | PointsInBoxes                | √   | √    |     |     |        |
@@ -54,10 +54,12 @@ We implement common ops used in detection, segmentation, etc.
 | SoftNMS                      |     | √    |     |     |        |
 | Sparse Convolution           |     | √    |     |     |        |
 | Synchronized BatchNorm       |     | √    |     |     |        |
-| ThreeInterpolate             |     | √    |     |     |        |
 | ThreeNN                      |     | √    | √   |     |        |
 | TINShift                     |     | √    | √   |     |        |
 | UpFirDn2d                    |     | √    |     |     |        |
-| Voxelization                 | √   | √    | √   |     |        |
+| Voxelization                 | √   | √    |     |     | √      |
 | PrRoIPool                    |     | √    |     |     |        |
-| NeighborhoodAttention        |     | √    |     |     |        |
+| BezierAlign                  | √   | √    |     |     |        |
+| BiasAct                      |     | √    |     |     |        |
+| FilteredLrelu                |     | √    |     |     |        |
+| Conv2dGradfix                |     | √    |     |     |        |

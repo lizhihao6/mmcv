@@ -4,7 +4,7 @@ import pytest
 import torch
 
 from mmcv.ops import Voxelization
-from mmcv.utils import IS_CUDA_AVAILABLE, IS_MLU_AVAILABLE
+from mmcv.utils import IS_NPU_AVAILABLE
 
 
 def _get_voxel_points_indices(points, coors, voxel):
@@ -17,7 +17,7 @@ def _get_voxel_points_indices(points, coors, voxel):
     pytest.param(
         'cuda:0',
         marks=pytest.mark.skipif(
-            not IS_CUDA_AVAILABLE, reason='requires CUDA support'))
+            not torch.cuda.is_available(), reason='requires CUDA support'))
 ])
 def test_voxelization(device_type):
     voxel_size = [0.5, 0.5, 0.5]
@@ -63,7 +63,8 @@ def test_voxelization(device_type):
         assert num_points_current_voxel == expected_num_points_per_voxel[i]
 
 
-@pytest.mark.skipif(not IS_CUDA_AVAILABLE, reason='requires CUDA support')
+@pytest.mark.skipif(
+    not torch.cuda.is_available(), reason='requires CUDA support')
 def test_voxelization_nondeterministic():
     voxel_size = [0.5, 0.5, 0.5]
     point_cloud_range = [0, -40, -3, 70.4, 40, 1]
@@ -141,11 +142,11 @@ def test_voxelization_nondeterministic():
 
 @pytest.mark.parametrize('device_type', [
     pytest.param(
-        'mlu',
+        'npu',
         marks=pytest.mark.skipif(
-            not IS_MLU_AVAILABLE, reason='requires MLU support'))
+            not IS_NPU_AVAILABLE, reason='requires NPU support'))
 ])
-def test_voxelization_mlu(device_type):
+def test_voxelization_npu(device_type):
     voxel_size = [0.5, 0.5, 0.5]
     point_cloud_range = [0, -40, -3, 70.4, 40, 1]
 
@@ -163,7 +164,7 @@ def test_voxelization_mlu(device_type):
 
     device = torch.device(device_type)
 
-    # test hard_voxelization on mlu
+    # test hard_voxelization on npu
     points = points.contiguous().to(device)
     coors, voxels, num_points_per_voxel = hard_voxelization.forward(points)
     coors = coors.cpu().detach().numpy()

@@ -7,15 +7,15 @@ from typing import Sequence
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.config import ConfigDict
+from mmengine.model import BaseModule, ModuleList, Sequential
+from mmengine.registry import MODELS
+from mmengine.utils import deprecated_api_warning, to_2tuple
 
 from mmcv.cnn import (Linear, build_activation_layer, build_conv_layer,
                       build_norm_layer)
-from mmcv.runner.base_module import BaseModule, ModuleList, Sequential
-from mmcv.utils import (ConfigDict, build_from_cfg, deprecated_api_warning,
-                        to_2tuple)
 from .drop import build_dropout
-from .registry import (ATTENTION, FEEDFORWARD_NETWORK, POSITIONAL_ENCODING,
-                       TRANSFORMER_LAYER, TRANSFORMER_LAYER_SEQUENCE)
+from .scale import LayerScale
 
 # Avoid BC-breaking of importing MultiScaleDeformableAttention from this file
 try:
@@ -32,32 +32,33 @@ try:
 except ImportError:
     warnings.warn('Fail to import ``MultiScaleDeformableAttention`` from '
                   '``mmcv.ops.multi_scale_deform_attn``, '
-                  'You should install ``mmcv-full`` if you need this module. ')
+                  'You should install ``mmcv`` rather than ``mmcv-lite`` '
+                  'if you need this module. ')
 
 
 def build_positional_encoding(cfg, default_args=None):
     """Builder for Position Encoding."""
-    return build_from_cfg(cfg, POSITIONAL_ENCODING, default_args)
+    return MODELS.build(cfg, default_args=default_args)
 
 
 def build_attention(cfg, default_args=None):
     """Builder for attention."""
-    return build_from_cfg(cfg, ATTENTION, default_args)
+    return MODELS.build(cfg, default_args=default_args)
 
 
 def build_feedforward_network(cfg, default_args=None):
     """Builder for feed-forward network (FFN)."""
-    return build_from_cfg(cfg, FEEDFORWARD_NETWORK, default_args)
+    return MODELS.build(cfg, default_args=default_args)
 
 
 def build_transformer_layer(cfg, default_args=None):
     """Builder for transformer layer."""
-    return build_from_cfg(cfg, TRANSFORMER_LAYER, default_args)
+    return MODELS.build(cfg, default_args=default_args)
 
 
 def build_transformer_layer_sequence(cfg, default_args=None):
     """Builder for transformer encoder and transformer decoder."""
-    return build_from_cfg(cfg, TRANSFORMER_LAYER_SEQUENCE, default_args)
+    return MODELS.build(cfg, default_args=default_args)
 
 
 class AdaptivePadding(nn.Module):
@@ -403,7 +404,7 @@ class PatchMerging(BaseModule):
         return x, output_size
 
 
-@ATTENTION.register_module()
+@MODELS.register_module()
 class MultiheadAttention(BaseModule):
     """A wrapper for ``torch.nn.MultiheadAttention``.
 
@@ -551,7 +552,7 @@ class MultiheadAttention(BaseModule):
         return identity + self.dropout_layer(self.proj_drop(out))
 
 
-@FEEDFORWARD_NETWORK.register_module()
+@MODELS.register_module()
 class FFN(BaseModule):
     """Implements feed-forward networks (FFNs) with identity connection.
 
@@ -572,6 +573,8 @@ class FFN(BaseModule):
             when adding the shortcut.
         init_cfg (obj:`mmcv.ConfigDict`): The Config for initialization.
             Default: None.
+        layer_scale_init_value (float): Initial value of scale factor in
+            LayerScale. Default: 1.0
     """
 
     @deprecated_api_warning(
@@ -589,23 +592,21 @@ class FFN(BaseModule):
                  dropout_layer=None,
                  add_identity=True,
                  init_cfg=None,
-                 **kwargs):
+                 layer_scale_init_value=0.):
         super().__init__(init_cfg)
         assert num_fcs >= 2, 'num_fcs should be no less ' \
             f'than 2. got {num_fcs}.'
         self.embed_dims = embed_dims
         self.feedforward_channels = feedforward_channels
         self.num_fcs = num_fcs
-        self.act_cfg = act_cfg
-        self.activate = build_activation_layer(act_cfg)
 
         layers = []
         in_channels = embed_dims
         for _ in range(num_fcs - 1):
             layers.append(
                 Sequential(
-                    Linear(in_channels, feedforward_channels), self.activate,
-                    nn.Dropout(ffn_drop)))
+                    Linear(in_channels, feedforward_channels),
+                    build_activation_layer(act_cfg), nn.Dropout(ffn_drop)))
             in_channels = feedforward_channels
         layers.append(Linear(feedforward_channels, embed_dims))
         layers.append(nn.Dropout(ffn_drop))
@@ -614,6 +615,11 @@ class FFN(BaseModule):
             dropout_layer) if dropout_layer else torch.nn.Identity()
         self.add_identity = add_identity
 
+        if layer_scale_init_value > 0:
+            self.gamma2 = LayerScale(embed_dims, scale=layer_scale_init_value)
+        else:
+            self.gamma2 = nn.Identity()
+
     @deprecated_api_warning({'residual': 'identity'}, cls_name='FFN')
     def forward(self, x, identity=None):
         """Forward function for `FFN`.
@@ -621,6 +627,7 @@ class FFN(BaseModule):
         The function would add x to the output tensor if residue is None.
         """
         out = self.layers(x)
+        out = self.gamma2(out)
         if not self.add_identity:
             return self.dropout_layer(out)
         if identity is None:
@@ -628,7 +635,7 @@ class FFN(BaseModule):
         return identity + self.dropout_layer(out)
 
 
-@TRANSFORMER_LAYER.register_module()
+@MODELS.register_module()
 class BaseTransformerLayer(BaseModule):
     """Base `TransformerLayer` for vision transformer.
 
@@ -859,7 +866,7 @@ class BaseTransformerLayer(BaseModule):
         return query
 
 
-@TRANSFORMER_LAYER_SEQUENCE.register_module()
+@MODELS.register_module()
 class TransformerLayerSequence(BaseModule):
     """Base class for TransformerEncoder and TransformerDecoder in vision
     transformer.

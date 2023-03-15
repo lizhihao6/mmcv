@@ -1,4 +1,5 @@
 addict
+mmengine>=0.2.0
 numpy
 packaging
 Pillow
