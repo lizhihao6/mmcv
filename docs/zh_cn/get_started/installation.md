@@ -2,21 +2,16 @@
 
 MMCV 有两个版本：
 
-- **mmcv-full**: 完整版，包含所有的特性以及丰富的开箱即用的 CPU 和 CUDA 算子。注意，完整版本可能需要更长时间来编译。
-- **mmcv**: 精简版，不包含 CPU 和 CUDA 算子但包含其余所有特性和功能，类似 MMCV 1.0 之前的版本。如果你不需要使用算子的话，精简版可以作为一个考虑选项。
+- **mmcv**: 完整版，包含所有的特性以及丰富的开箱即用的 CPU 和 CUDA 算子。注意，完整版本可能需要更长时间来编译。
+- **mmcv-lite**: 精简版，不包含 CPU 和 CUDA 算子但包含其余所有特性和功能，类似 MMCV 1.0 之前的版本。如果你不需要使用算子的话，精简版可以作为一个考虑选项。
 
 ```{warning}
-请不要在同一个环境中安装两个版本，否则可能会遇到类似 `ModuleNotFound` 的错误。在安装一个版本之前，需要先卸载另一个。`如果CUDA可用，强烈推荐安装mmcv-full`。
+请不要在同一个环境中安装两个版本，否则可能会遇到类似 `ModuleNotFound` 的错误。在安装一个版本之前，需要先卸载另一个。`如果 CUDA 可用，强烈推荐安装 mmcv`。
 ```
 
-### 安装 mmcv-full
+### 安装 mmcv
 
-```{note}
-- 如需编译 ONNX Runtime 自定义算子，请参考[如何编译ONNX Runtime自定义算子](../deployment/onnxruntime_op.md#如何编译onnx-runtime自定义算子)
-- 如需编译 TensorRT 自定义，请参考[如何编译MMCV中的TensorRT插件](../deployment/tensorrt_plugin.md#如何编译mmcv中的tensorrt插件)
-```
-
-在安装 mmcv-full 之前，请确保 PyTorch 已经成功安装在环境中，可以参考 [PyTorch 官方安装文档](https://pytorch.org/get-started/locally/#start-locally)。可使用以下命令验证
+在安装 mmcv 之前，请确保 PyTorch 已经成功安装在环境中，可以参考 [PyTorch 官方安装文档](https://pytorch.org/get-started/locally/#start-locally)。可使用以下命令验证
 
 ```bash
 python -c 'import torch;print(torch.__version__)'
@@ -26,21 +21,21 @@ python -c 'import torch;print(torch.__version__)'
 
 #### 使用 mim 安装（推荐）
 
-[mim](https://github.com/open-mmlab/mim) 是 OpenMMLab 项目的包管理工具，使用它可以很方便地安装 mmcv-full。
+[mim](https://github.com/open-mmlab/mim) 是 OpenMMLab 项目的包管理工具，使用它可以很方便地安装 mmcv。
 
 ```bash
 pip install -U openmim
-mim install mmcv-full
+mim install "mmcv>=2.0.0rc1"
 ```
 
-如果发现上述的安装命令没有使用预编译包（以 `.whl` 结尾）而是使用源码包（以 `.tar.gz` 结尾）安装，则有可能是我们没有提供和当前环境的 PyTorch 版本、CUDA 版本相匹配的 mmcv-full 预编译包，此时，你可以[源码安装 mmcv-full](build.md)。
+如果发现上述的安装命令没有使用预编译包（以 `.whl` 结尾）而是使用源码包（以 `.tar.gz` 结尾）安装，则有可能是我们没有提供和当前环境的 PyTorch 版本、CUDA 版本相匹配的 mmcv 预编译包，此时，你可以[源码安装 mmcv](build.md)。
 
 <details>
 <summary>使用预编译包的安装日志</summary>
 
 Looking in links: https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html<br />
-Collecting mmcv-full<br />
-<b>Downloading https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/mmcv_full-1.6.1-cp38-cp38-manylinux1_x86_64.whl</b>
+Collecting mmcv<br />
+<b>Downloading https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/mmcv-2.0.0rc3-cp38-cp38-manylinux1_x86_64.whl</b>
 
 </details>
 
@@ -48,15 +43,15 @@ Collecting mmcv-full<br />
 <summary>使用源码包的安装日志</summary>
 
 Looking in links: https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html<br />
-Collecting mmcv-full==1.6.0<br />
-<b>Downloading mmcv-full-1.6.0.tar.gz</b>
+Collecting mmcv==2.0.0rc3<br />
+<b>Downloading mmcv-2.0.0rc3.tar.gz</b>
 
 </details>
 
-如需安装指定版本的 mmcv-full，例如安装 1.7.0 版本的 mmcv-full，可使用以下命令
+如需安装指定版本的 mmcv，例如安装 2.0.0rc3 版本的 mmcv，可使用以下命令
 
 ```bash
-mim install mmcv-full==1.7.0
+mim install mmcv==2.0.0rc3
 ```
 
 :::{note}
@@ -65,12 +60,12 @@ mim install mmcv-full==1.7.0
 另外，如果安装依赖库的时间过长，可以指定 pypi 源
 
 ```bash
-mim install mmcv-full -i https://pypi.tuna.tsinghua.edu.cn/simple
+mim install "mmcv>=2.0.0rc1" -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 :::
 
-安装完成后可以运行 [check_installation.py](https://github.com/open-mmlab/mmcv/.dev_scripts/check_installation.py) 脚本检查 mmcv-full 是否安装成功。
+安装完成后可以运行 [check_installation.py](https://github.com/open-mmlab/mmcv/blob/2.x/.dev_scripts/check_installation.py) 脚本检查 mmcv 是否安装成功。
 
 #### 使用 pip 安装
 
@@ -193,8 +188,8 @@ python -c 'import torch;print(torch.__version__);print(torch.version.cuda)'
     }
     function changeCmd() {
         const cmd = document.getElementById("select-cmd");
-        let cmdString = "pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/{cu_version}/{torch_version}/index.html";
-        // e.g: pip install mmcv-full==1.6.0 -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9/index.html
+        let cmdString = "pip install mmcv=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/{cu_version}/{torch_version}/index.html";
+        // e.g: pip install mmcv==2.0.0rc1 -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9/index.html
         let cudaVersion;
         if (cudaVal === "cpu" || cudaVal === "mps") {
             cudaVersion = "cpu";
@@ -309,11 +304,11 @@ python -c 'import torch;print(torch.__version__);print(torch.version.cuda)'
 </script>
 </html>
 
-如果在上面的下拉框中没有找到对应的版本，则可能是没有对应 PyTorch 或者 CUDA 或者 mmcv-full 版本的预编译包，此时，你可以[源码安装 mmcv-full](../faq.md)。
+如果在上面的下拉框中没有找到对应的版本，则可能是没有对应 PyTorch 或者 CUDA 或者 mmcv 版本的预编译包，此时，你可以[源码安装 mmcv](build.md)。
 
 :::{note}
-PyTorch 在 1.x.0 和 1.x.1 之间通常是兼容的，故 mmcv-full 只提供 1.x.0 的编译包。如果你
-的 PyTorch 版本是 1.x.1，你可以放心地安装在 1.x.0 版本编译的 mmcv-full。例如，如果你的
+PyTorch 在 1.x.0 和 1.x.1 之间通常是兼容的，故 mmcv 只提供 1.x.0 的编译包。如果你
+的 PyTorch 版本是 1.x.1，你可以放心地安装在 1.x.0 版本编译的 mmcv。例如，如果你的
 PyTorch 版本是 1.8.1，你可以放心选择 1.8.x。
 :::
 
@@ -323,12 +318,12 @@ PyTorch 版本是 1.8.1，你可以放心选择 1.8.x。
 另外，如果安装依赖库的时间过长，可以指定 pypi 源
 
 ```bash
-pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install "mmcv>=2.0.0rc1" -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 :::
 
-安装完成后可以运行 [check_installation.py](https://github.com/open-mmlab/mmcv/.dev_scripts/check_installation.py) 脚本检查 mmcv-full 是否安装成功。
+安装完成后可以运行 [check_installation.py](https://github.com/open-mmlab/mmcv/blob/2.x/.dev_scripts/check_installation.py) 脚本检查 mmcv 是否安装成功。
 
 #### 使用 docker 镜像
 
@@ -342,13 +337,13 @@ docker build -t mmcv -f docker/release/Dockerfile .
 也可以直接使用下面的命令构建镜像
 
 ```bash
-docker build -t mmcv https://github.com/open-mmlab/mmcv.git#master:docker/release
+docker build -t mmcv https://github.com/open-mmlab/mmcv.git#2.x:docker/release
 ```
 
-[Dockerfile](release/Dockerfile) 默认安装最新的 mmcv-full，如果你想要指定版本，可以使用下面的命令
+[Dockerfile](release/Dockerfile) 默认安装最新的 mmcv，如果你想要指定版本，可以使用下面的命令
 
 ```bash
-docker image build -t mmcv -f docker/release/Dockerfile --build-arg MMCV=1.5.0 .
+docker image build -t mmcv -f docker/release/Dockerfile --build-arg MMCV=2.0.0rc1 .
 ```
 
 如果你想要使用其他版本的 PyTorch 和 CUDA，你可以在构建镜像时指定它们的版本。
@@ -360,15 +355,15 @@ docker build -t mmcv -f docker/release/Dockerfile \
     --build-arg PYTORCH=1.11.0 \
     --build-arg CUDA=11.3 \
     --build-arg CUDNN=8 \
-    --build-arg MMCV=1.5.0 .
+    --build-arg MMCV=2.0.0rc1 .
 ```
 
 更多 PyTorch 和 CUDA 镜像可以点击 [dockerhub/pytorch](https://hub.docker.com/r/pytorch/pytorch/tags) 查看。
 
-### 安装 mmcv
+### 安装 mmcv-lite
 
 如果你需要使用和 PyTorch 相关的模块，请确保 PyTorch 已经成功安装在环境中，可以参考 [PyTorch 官方安装文档](https://pytorch.org/get-started/locally/#start-locally)。
 
 ```python
-pip install mmcv
+pip install mmcv-lite
 ```

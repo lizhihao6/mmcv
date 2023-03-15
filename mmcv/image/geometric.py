@@ -4,8 +4,8 @@ from typing import List, Optional, Tuple, Union, no_type_check
 
 import cv2
 import numpy as np
+from mmengine.utils import to_2tuple
 
-from ..utils import to_2tuple
 from .io import imread_backend
 
 try:
@@ -510,6 +510,7 @@ def impad(img: np.ndarray,
             areas when padding_mode is 'constant'. Default: 0.
         padding_mode (str): Type of padding. Should be: constant, edge,
             reflect or symmetric. Default: constant.
+
             - constant: pads with a constant value, this value is specified
               with pad_val.
             - edge: pads with the last value at the edge of the image.

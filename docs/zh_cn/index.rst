@@ -16,25 +16,16 @@
    :maxdepth: 2
    :caption: 深入理解 MMCV
 
-   understand_mmcv/config.md
-   understand_mmcv/registry.md
-   understand_mmcv/runner.md
-   understand_mmcv/io.md
    understand_mmcv/data_process.md
+   understand_mmcv/data_transform.md
    understand_mmcv/visualization.md
    understand_mmcv/cnn.md
    understand_mmcv/ops.md
-   understand_mmcv/utils.md
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 部署
+   :caption: 语言切换
 
-   deployment/onnx.md
-   deployment/onnxruntime_op.md
-   deployment/onnxruntime_custom_ops.md
-   deployment/tensorrt_plugin.md
-   deployment/tensorrt_custom_ops.md
+   switch_language.md
 
 .. toctree::
    :caption: 语言切换
@@ -48,8 +39,6 @@
    compatibility.md
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 常见问题
 
    faq.md
 
@@ -62,10 +51,17 @@
    community/code_style.md
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: API 文档
 
-   api.rst
+   mmcv.image <api/image>
+   mmcv.video <api/video>
+   mmcv.visualization <api/visualization>
+   mmcv.cnn <api/cnn>
+   mmcv.ops <api/ops>
+   mmcv.transforms <api/transforms>
+   mmcv.arraymisc <api/arraymisc>
+   mmcv.utils <api/utils>
 
 
 Indices and tables

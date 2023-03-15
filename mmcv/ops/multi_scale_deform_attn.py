@@ -3,16 +3,15 @@ import math
 import warnings
 from typing import Optional, no_type_check
 
+import mmengine
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule, constant_init, xavier_init
+from mmengine.registry import MODELS
+from mmengine.utils import deprecated_api_warning
 from torch.autograd.function import Function, once_differentiable
 
-import mmcv
-from mmcv import deprecated_api_warning
-from mmcv.cnn import constant_init, xavier_init
-from mmcv.cnn.bricks.registry import ATTENTION
-from mmcv.runner import BaseModule
 from mmcv.utils import IS_CUDA_AVAILABLE, IS_MLU_AVAILABLE
 from ..utils import ext_loader
 
@@ -157,7 +156,7 @@ def multi_scale_deformable_attn_pytorch(
     return output.transpose(1, 2).contiguous()
 
 
-@ATTENTION.register_module()
+@MODELS.register_module()
 class MultiScaleDeformableAttention(BaseModule):
     """An attention module used in Deformable-Detr.
 
@@ -183,6 +182,8 @@ class MultiScaleDeformableAttention(BaseModule):
             Default: None.
         init_cfg (obj:`mmcv.ConfigDict`): The Config for initialization.
             Default: None.
+        value_proj_ratio (float): The expansion ratio of value_proj.
+            Default: 1.0.
     """
 
     def __init__(self,
@@ -194,7 +195,8 @@ class MultiScaleDeformableAttention(BaseModule):
                  dropout: float = 0.1,
                  batch_first: bool = False,
                  norm_cfg: Optional[dict] = None,
-                 init_cfg: Optional[mmcv.ConfigDict] = None):
+                 init_cfg: Optional[mmengine.ConfigDict] = None,
+                 value_proj_ratio: float = 1.0):
         super().__init__(init_cfg)
         if embed_dims % num_heads != 0:
             raise ValueError(f'embed_dims must be divisible by num_heads, '
@@ -229,8 +231,9 @@ class MultiScaleDeformableAttention(BaseModule):
             embed_dims, num_heads * num_levels * num_points * 2)
         self.attention_weights = nn.Linear(embed_dims,
                                            num_heads * num_levels * num_points)
-        self.value_proj = nn.Linear(embed_dims, embed_dims)
-        self.output_proj = nn.Linear(embed_dims, embed_dims)
+        value_proj_size = int(embed_dims * value_proj_ratio)
+        self.value_proj = nn.Linear(embed_dims, value_proj_size)
+        self.output_proj = nn.Linear(value_proj_size, embed_dims)
         self.init_weights()
 
     def init_weights(self) -> None:

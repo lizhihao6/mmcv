@@ -1,19 +1,14 @@
 ## Build MMCV from source
 
-### Build mmcv-full
+### Build mmcv
 
-Before installing mmcv-full, make sure that PyTorch has been successfully installed following the [PyTorch official installation guide](https://pytorch.org/get-started/locally/#start-locally). This can be verified using the following command
+Before installing mmcv, make sure that PyTorch has been successfully installed following the [PyTorch official installation guide](https://pytorch.org/get-started/locally/#start-locally). This can be verified using the following command
 
 ```bash
 python -c 'import torch;print(torch.__version__)'
 ```
 
 If version information is output, then PyTorch is installed.
-
-```{note}
-- To compile ONNX Runtime custom operators, please refer to [How to build custom operators for ONNX Runtime](https://mmcv.readthedocs.io/en/latest/deployment/onnxruntime_op.html#how-to-build-custom-operators-for-onnx-runtime)
-- To compile TensorRT customization, please refer to [How to build TensorRT plugins in MMCV](https://mmcv.readthedocs.io/en/latest/deployment/tensorrt_plugin.html#how-to-build-tensorrt-plugins-in-mmcv)
-```
 
 ```{note}
 If you would like to use `opencv-python-headless` instead of `opencv-python`,
@@ -65,7 +60,7 @@ you can first install it before installing MMCV to skip the installation of `ope
 5. Start building (takes 10+ min)
 
    ```bash
-   MMCV_WITH_OPS=1 pip install -e . -v
+   pip install -e . -v
    ```
 
 6. Validate the installation
@@ -81,7 +76,7 @@ you can first install it before installing MMCV to skip the installation of `ope
 #### Build on macOS
 
 ```{note}
-If you are using a mac with an M1 chip, install the nightly version of PyTorch, otherwise you will encounter the problem in [issues#2218](https://github.com/open-mmlab/mmcv/issues/2218).
+If you are using a mac with apple silicon chip, install the PyTorch 1.13+, otherwise you will encounter the problem in [issues#2218](https://github.com/open-mmlab/mmcv/issues/2218).
 ```
 
 1. Clone the repo
@@ -172,13 +167,7 @@ You should know how to set up environment variables, especially `Path`, on Windo
    (mmcv) PS C:\Users\xxx\mmcv> pip install -r requirements/optional.txt
    ```
 
-6. Install required Python packages
-
-   ```shell
-   (mmcv) PS C:\Users\xxx\mmcv> pip install -r requirements/runtime.txt
-   ```
-
-7. Set up MSVC compiler
+6. Set up MSVC compiler
 
    Set Environment variable, add `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\bin\Hostx86\x64` to `PATH`, so that `cl.exe` will be available in prompt, as shown below.
 
@@ -196,7 +185,7 @@ You should know how to set up environment variables, especially `Path`, on Windo
 
 ##### Build and install MMCV
 
-mmcv-full can be built in two ways:
+mmcv can be built in two ways:
 
 1. Full version (CPU ops)
 
@@ -208,22 +197,16 @@ mmcv-full can be built in two ways:
 
 ###### CPU version
 
-1. Set up environment variables
+Build and install
 
-   ```powershell
-   (mmcv) PS C:\Users\xxx\mmcv> $env:MMCV_WITH_OPS = 1
-   ```
-
-2. Build and install
-
-   ```powershell
-   (mmcv) PS C:\Users\xxx\mmcv> python setup.py build_ext
-   (mmcv) PS C:\Users\xxx\mmcv> python setup.py develop
-   ```
+```powershell
+(mmcv) PS C:\Users\xxx\mmcv> python setup.py build_ext
+(mmcv) PS C:\Users\xxx\mmcv> python setup.py develop
+```
 
 ###### GPU version
 
-2. Make sure `CUDA_PATH` or `CUDA_HOME` is already set in `envs` via `ls env:`, desired output is shown as below:
+1. Make sure `CUDA_PATH` or `CUDA_HOME` is already set in `envs` via `ls env:`, desired output is shown as below:
 
    ```powershell
    (mmcv) PS C:\Users\xxx\mmcv> ls env:
@@ -243,7 +226,7 @@ mmcv-full can be built in two ways:
    (mmcv) PS C:\Users\xxx\mmcv> $env:CUDA_HOME = $env:CUDA_PATH_V10_2 # if CUDA_PATH_V10_2 is in envs:
    ```
 
-3. Set CUDA target arch
+2. Set CUDA target arch
 
    ```shell
    # Here you need to change to the target architecture corresponding to your GPU
@@ -263,7 +246,7 @@ mmcv-full can be built in two ways:
    The 7.5 above indicates the target architecture. Note: You need to replace v10.2 with your CUDA version in the above command.
    :::
 
-4. Build and install
+3. Build and install
 
    ```powershell
    # build
@@ -285,7 +268,7 @@ mmcv-full can be built in two ways:
 If no error is reported by the above command, the installation is successful. If there is an error reported, please check [Frequently Asked Questions](../faq.md) to see if there is already a solution.
 If no solution is found, please feel free to open an [issue](https://github.com/open-mmlab/mmcv/issues).
 
-### Build mmcv
+### Build mmcv-lite
 
 If you need to use PyTorch-related modules, make sure PyTorch has been successfully installed in your environment by referring to the [PyTorch official installation guide](https://github.com/pytorch/pytorch#installation).
 
@@ -299,7 +282,7 @@ If you need to use PyTorch-related modules, make sure PyTorch has been successfu
 2. Start building
 
    ```bash
-   pip install -e . -v
+   MMCV_WITH_OPS=0 pip install -e . -v
    ```
 
 3. Validate installation
@@ -307,71 +290,3 @@ If you need to use PyTorch-related modules, make sure PyTorch has been successfu
    ```bash
    python -c 'import mmcv;print(mmcv.__version__)'
    ```
-
-### Build mmcv-full on IPU machine
-
-Firstly, you need to apply for an IPU cloud machine, see [here](https://www.graphcore.ai/ipus-in-the-cloud).
-
-#### Option 1: Docker
-
-1. Pull docker
-
-   ```bash
-   docker pull graphcore/pytorch
-   ```
-
-2. Build MMCV under same python environment
-
-#### Option 2: Install from SDK
-
-1. Build MMCV
-
-2. Use pip to install sdk according to [IPU PyTorch document](https://docs.graphcore.ai/projects/poptorch-user-guide/en/latest/installation.html). Also, you need to apply for machine and sdk to Graphcore.
-
-### Build mmcv-full on Ascend NPU machine
-
-Before building mmcv-full, `torch_npu` should be installed. See the complete installation tutorial [PyTorch Installation Guide](https://gitee.com/ascend/pytorch/blob/master/docs/en/PyTorch%20Installation%20Guide/PyTorch%20Installation%20Guide.md)
-
-#### Option 1: Install mmcv-full with pip
-
-The Ascend compiled version of mmcv-full is already supported when the version of mmcv >= 1.7.0, we can pip install directly
-
-```bash
-pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/ascend/torch1.8.0/index.html
-```
-
-#### Option 2: Build mmcv-full NPU (Ascend) from Source
-
-- Pull the source code
-
-```bash
-git pull https://github.com/open-mmlab/mmcv/tree/master
-```
-
-- Build
-
-```bash
-MMCV_WITH_OPS=1 MAX_JOBS=8 FORCE_NPU=1 python setup.py build_ext
-```
-
-- Install
-
-```bash
-MMCV_WITH_OPS=1 FORCE_NPU=1 python setup.py develop
-```
-
-#### Test Case
-
-```python
-import torch
-import torch_npu
-from mmcv.ops import softmax_focal_loss
-
-# Init tensor to the NPU
-x = torch.randn(3, 10).npu()
-y = torch.tensor([1, 5, 3]).npu()
-w = torch.ones(10).float().npu()
-
-output = softmax_focal_loss(x, y, 2.0, 0.25, w, 'none')
-print(output)
-```
