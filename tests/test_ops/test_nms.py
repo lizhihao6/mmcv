@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import mmengine
 import numpy as np
 import pytest
 import torch
@@ -145,8 +144,9 @@ class Testnms:
             nms_match(wrong_dets, iou_thr)
 
     def test_batched_nms(self):
+        import mmcv
         from mmcv.ops import batched_nms
-        results = mmengine.load('./tests/data/batched_nms_data.pkl')
+        results = mmcv.load('./tests/data/batched_nms_data.pkl')
 
         nms_max_num = 100
         nms_cfg = dict(

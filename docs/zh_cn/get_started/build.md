@@ -1,11 +1,16 @@
 ## 从源码编译 MMCV
 
-### 编译 mmcv
+### 编译 mmcv-full
 
-在编译 mmcv 之前，请确保 PyTorch 已经成功安装在环境中，可以参考 [PyTorch 官方安装文档](https://pytorch.org/get-started/locally/#start-locally)。可使用以下命令验证
+在编译 mmcv-full 之前，请确保 PyTorch 已经成功安装在环境中，可以参考 [PyTorch 官方安装文档](https://pytorch.org/get-started/locally/#start-locally)。可使用以下命令验证
 
 ```bash
 python -c 'import torch;print(torch.__version__)'
+```
+
+```{note}
+- 如需编译 ONNX Runtime 自定义算子，请参考[如何编译ONNX Runtime自定义算子](https://mmcv.readthedocs.io/zh_CN/latest/deployment/onnxruntime_op.html#id1)
+- 如需编译 TensorRT 自定义，请参考[如何编译MMCV中的TensorRT插件](https://mmcv.readthedocs.io/zh_CN/latest/deployment/tensorrt_plugin.html#id3)
 ```
 
 :::{note}
@@ -26,7 +31,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 :::
 
-#### 在 Linux 上编译 mmcv
+#### 在 Linux 上编译 mmcv-full
 
 | TODO: 视频教程
 
@@ -72,7 +77,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 5. 开始编译（预估耗时 10 分钟）
 
    ```bash
-   pip install -e . -v
+   MMCV_WITH_OPS=1 pip install -e . -v
    ```
 
 6. 验证安装
@@ -81,16 +86,16 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
    python .dev_scripts/check_installation.py
    ```
 
-   如果上述命令没有报错，说明安装成功。如有报错，请查看[问题解决页面](../faq.html)是否已经有解决方案。
+   如果上述命令没有报错，说明安装成功。如有报错，请查看[问题解决页面](https://mmcv.readthedocs.io/zh_CN/latest/faq.html)是否已经有解决方案。
 
    如果没有找到解决方案，欢迎提 [issue](https://github.com/open-mmlab/mmcv/issues)。
 
-#### 在 macOS 上编译 mmcv
+#### 在 macOS 上编译 mmcv-full
 
 | TODO: 视频教程
 
 ```{note}
-如果你使用的是搭载 apple silicon 的 mac 设备，请安装 PyTorch 1.13+ 的版本，否则会遇到 [issues#2218](https://github.com/open-mmlab/mmcv/issues/2218) 中的问题。
+如果你使用的 mac 是 M1 芯片，请安装 PyTorch 的 nightly 版本，否则会遇到 [issues#2218](https://github.com/open-mmlab/mmcv/issues/2218) 中的问题。
 ```
 
 1. 克隆代码仓库
@@ -109,7 +114,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 3. 开始编译
 
    ```bash
-   pip install -e .
+   MMCV_WITH_OPS=1 pip install -e .
    ```
 
 4. 验证安装
@@ -122,11 +127,11 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
    如果没有找到解决方案，欢迎提 [issue](https://github.com/open-mmlab/mmcv/issues)。
 
-#### 在 Windows 上编译 mmcv
+#### 在 Windows 上编译 mmcv-full
 
 | TODO: 视频教程
 
-在 Windows 上编译 mmcv 比 Linux 复杂，本节将一步步介绍如何在 Windows 上编译 mmcv。
+在 Windows 上编译 mmcv-full 比 Linux 复杂，本节将一步步介绍如何在 Windows 上编译 mmcv-full。
 
 ##### 依赖项
 
@@ -138,7 +143,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 - [CUDA 10.2](https://developer.nvidia.com/cuda-10.2-download-archive)：如果只需要 CPU 版本可以不安装 CUDA，安装 CUDA 时，可根据需要进行自定义安装。如果已经安装新版本的显卡驱动，建议取消驱动程序的安装
 
 ```{note}
-如果不清楚如何安装以上依赖，请参考[Windows 环境从零安装 mmcv](https://zhuanlan.zhihu.com/p/434491590)。
+如果不清楚如何安装以上依赖，请参考[Windows 环境从零安装 mmcv-full](https://zhuanlan.zhihu.com/p/434491590)。
 另外，你需要知道如何在 Windows 上设置变量环境，尤其是 "PATH" 的设置，以下安装过程都会用到。
 ```
 
@@ -177,7 +182,13 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
    (mmcv) PS C:\Users\xxx\mmcv> pip install -r requirements/optional.txt
    ```
 
-6. 设置 MSVC 编译器
+6. 安装 mmcv 依赖
+
+   ```powershell
+   (mmcv) PS C:\Users\xxx\mmcv> pip install -r requirements/runtime.txt
+   ```
+
+7. 设置 MSVC 编译器
 
    设置环境变量。添加 `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\bin\Hostx86\x64` 到 `PATH`，则 `cl.exe` 可以在命令行中运行，如下所示。
 
@@ -193,9 +204,9 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
    因为 PyTorch 将解析 `cl.exe` 的输出以检查其版本，只有 utf-8 将会被识别，你可能需要将系统语言更改为英语。控制面板 -> 地区-> 管理-> 非 Unicode 来进行语言转换。
 
-##### 编译与安装 mmcv
+##### 编译与安装 mmcv-full
 
-mmcv 有两个版本：
+mmcv-full 有两个版本：
 
 - 只包含 CPU 算子的版本
 
@@ -207,16 +218,28 @@ mmcv 有两个版本：
 
 ###### CPU 版本
 
-编译安装
+1. 设置环境变量
 
-```powershell
-(mmcv) PS C:\Users\xxx\mmcv> python setup.py build_ext  # 如果成功, cl 将被启动用于编译算子
-(mmcv) PS C:\Users\xxx\mmcv> python setup.py develop  # 安装
-```
+   ```powershell
+   (mmcv) PS C:\Users\xxx\mmcv> $env:MMCV_WITH_OPS = 1
+   ```
+
+2. 编译安装
+
+   ```powershell
+   (mmcv) PS C:\Users\xxx\mmcv> python setup.py build_ext  # 如果成功, cl 将被启动用于编译算子
+   (mmcv) PS C:\Users\xxx\mmcv> python setup.py develop  # 安装
+   ```
 
 ###### GPU 版本
 
-1. 检查 `CUDA_PATH` 或者 `CUDA_HOME` 环境变量已经存在在 `envs` 之中
+1. 设置环境变量
+
+   ```powershell
+   (mmcv) PS C:\Users\xxx\mmcv> $env:MMCV_WITH_OPS = 1
+   ```
+
+2. 检查 `CUDA_PATH` 或者 `CUDA_HOME` 环境变量已经存在在 `envs` 之中
 
    ```powershell
    (mmcv) PS C:\Users\xxx\mmcv> ls env:
@@ -236,7 +259,7 @@ mmcv 有两个版本：
    (mmcv) PS C:\Users\xxx\mmcv> $env:CUDA_HOME = $env:CUDA_PATH_V10_2  # CUDA_PATH_V10_2 已经在环境变量中
    ```
 
-2. 设置 CUDA 的目标架构
+3. 设置 CUDA 的目标架构
 
    ```powershell
    # 这里需要改成你的显卡对应的目标架构
@@ -256,7 +279,7 @@ mmcv 有两个版本：
    上面的 7.5 表示目标架构。注意：需把上面命令的 v10.2 换成你的 CUDA 版本。
    :::
 
-3. 编译安装
+4. 编译安装
 
    ```powershell
    (mmcv) PS C:\Users\xxx\mmcv> python setup.py build_ext  # 如果成功, cl 将被启动用于编译算子
@@ -276,7 +299,7 @@ mmcv 有两个版本：
 如果上述命令没有报错，说明安装成功。如有报错，请查看[问题解决页面](../faq.md)是否已经有解决方案。
 如果没有找到解决方案，欢迎提 [issue](https://github.com/open-mmlab/mmcv/issues)。
 
-### 编译 mmcv-lite
+### 编译 mmcv
 
 如果你需要使用和 PyTorch 相关的模块，请确保 PyTorch 已经成功安装在环境中，可以参考 [PyTorch 官方安装文档](https://pytorch.org/get-started/locally/#start-locally)。
 
@@ -290,7 +313,7 @@ mmcv 有两个版本：
 2. 开始编译
 
    ```bash
-   MMCV_WITH_OPS=0 pip install -e . -v
+   pip install -e . -v
    ```
 
 3. 验证安装
@@ -298,3 +321,71 @@ mmcv 有两个版本：
    ```bash
    python -c 'import mmcv;print(mmcv.__version__)'
    ```
+
+### 在 IPU 机器编译 mmcv
+
+首先你需要有可用的 IPU 云机器，可以查看[这里](https://www.graphcore.ai/ipus-in-the-cloud)。
+
+#### 选项1: 使用 Docker
+
+1. 拉取镜像
+
+   ```bash
+   docker pull graphcore/pytorch
+   ```
+
+2. 编译 mmcv
+
+#### 选项2: 使用 SDK
+
+1. 编译 mmcv
+
+2. 参考 [IPU PyTorch document](https://docs.graphcore.ai/projects/poptorch-user-guide/en/latest/installation.html) 安装 sdk。
+
+### 在昇腾 NPU 机器编译 mmcv-full
+
+在编译 mmcv-full 前，需要安装 torch_npu，完整安装教程详见 [PyTorch 安装指南](https://gitee.com/ascend/pytorch/blob/master/docs/zh/PyTorch%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/PyTorch%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97.md#pytorch%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97)
+
+#### 选项 1: 使用 pip 安装 Ascend 编译版本的 mmcv-full
+
+Ascend 编译版本的 mmcv-full 在 mmcv >= 1.7.0 时已经支持直接 pip 安装
+
+```bash
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/ascend/torch1.8.0/index.html
+```
+
+#### 选项 2: 使用 NPU 设备源码编译安装 mmcv-full
+
+- 拉取 [MMCV 源码](https://github.com/open-mmlab/mmcv/tree/master)
+
+```bash
+git pull https://github.com/open-mmlab/mmcv/tree/master
+```
+
+- 编译
+
+```bash
+MMCV_WITH_OPS=1 MAX_JOBS=8 FORCE_NPU=1 python setup.py build_ext
+```
+
+- 安装
+
+```bash
+MMCV_WITH_OPS=1 FORCE_NPU=1 python setup.py develop
+```
+
+#### 验证
+
+```python
+import torch
+import torch_npu
+from mmcv.ops import softmax_focal_loss
+
+# Init tensor to the NPU
+x = torch.randn(3, 10).npu()
+y = torch.tensor([1, 5, 3]).npu()
+w = torch.ones(10).float().npu()
+
+output = softmax_focal_loss(x, y, 2.0, 0.25, w, 'none')
+print(output)
+```

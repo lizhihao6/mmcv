@@ -127,17 +127,17 @@ class TestDeformRoIPool:
 
     @pytest.mark.parametrize('device', [
         pytest.param(
-            'npu',
-            marks=pytest.mark.skipif(
-                not IS_NPU_AVAILABLE, reason='requires NPU support')),
-        pytest.param(
             'cuda',
             marks=pytest.mark.skipif(
                 not IS_CUDA_AVAILABLE, reason='requires CUDA support')),
         pytest.param(
             'mlu',
             marks=pytest.mark.skipif(
-                not IS_MLU_AVAILABLE, reason='requires MLU support'))
+                not IS_MLU_AVAILABLE, reason='requires MLU support')),
+        pytest.param(
+            'npu',
+            marks=pytest.mark.skipif(
+                not IS_NPU_AVAILABLE, reason='requires NPU support'))
     ])
     @pytest.mark.parametrize('dtype', [
         torch.float,

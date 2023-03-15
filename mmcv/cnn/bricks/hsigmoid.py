@@ -3,10 +3,11 @@ import warnings
 
 import torch
 import torch.nn as nn
-from mmengine.registry import MODELS
+
+from .registry import ACTIVATION_LAYERS
 
 
-@MODELS.register_module()
+@ACTIVATION_LAYERS.register_module()
 class HSigmoid(nn.Module):
     """Hard Sigmoid Module. Apply the hard sigmoid function:
     Hsigmoid(x) = min(max((x + bias) / divisor, min_value), max_value)

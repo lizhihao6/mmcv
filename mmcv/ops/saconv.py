@@ -2,16 +2,13 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmengine.model import constant_init
-from mmengine.registry import MODELS
-from mmengine.utils import digit_version
-from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmcv.cnn import ConvAWS2d
+from mmcv.cnn import CONV_LAYERS, ConvAWS2d, constant_init
 from mmcv.ops.deform_conv import deform_conv2d
+from mmcv.utils import TORCH_VERSION, digit_version
 
 
-@MODELS.register_module(name='SAC')
+@CONV_LAYERS.register_module(name='SAC')
 class SAConv2d(ConvAWS2d):
     """SAC (Switchable Atrous Convolution)
 

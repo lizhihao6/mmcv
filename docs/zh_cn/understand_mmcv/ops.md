@@ -7,7 +7,7 @@ MMCV 提供了检测、分割等任务中常用的算子
 | ActiveRotatedFilter          | √   | √    |     |     |        |
 | AssignScoreWithK             |     | √    |     |     |        |
 | BallQuery                    |     | √    |     |     |        |
-| BBoxOverlaps                 |     | √    | √   | √   | √      |
+| BBoxOverlaps                 |     | √    | √   | √   |        |
 | BorderAlign                  |     | √    |     |     |        |
 | BoxIouRotated                | √   | √    |     |     |        |
 | BoxIouQuadri                 | √   | √    |     |     |        |
@@ -18,24 +18,24 @@ MMCV 提供了检测、分割等任务中常用的算子
 | ConvexIoU                    |     | √    |     |     |        |
 | CornerPool                   |     | √    |     |     |        |
 | Correlation                  |     | √    |     |     |        |
-| Deformable Convolution v1/v2 | √   | √    |     |     | √      |
+| Deformable Convolution v1/v2 | √   | √    | √   |     | √      |
 | Deformable RoIPool           |     | √    | √   |     | √      |
 | DiffIoURotated               |     | √    |     |     |        |
 | DynamicScatter               |     | √    |     |     |        |
 | FurthestPointSample          |     | √    |     |     |        |
 | FurthestPointSampleWithDist  |     | √    |     |     |        |
 | FusedBiasLeakyrelu           |     | √    |     |     | √      |
-| GatherPoints                 |     | √    |     |     | √      |
+| GatherPoints                 |     | √    |     |     |        |
 | GroupPoints                  |     | √    |     |     |        |
 | Iou3d                        |     | √    | √   |     |        |
 | KNN                          |     | √    |     |     |        |
 | MaskedConv                   |     | √    | √   |     | √      |
 | MergeCells                   |     | √    |     |     |        |
 | MinAreaPolygon               |     | √    |     |     |        |
-| ModulatedDeformConv2d        | √   | √    |     |     | √      |
+| ModulatedDeformConv2d        | √   | √    | √   |     | √      |
 | MultiScaleDeformableAttn     |     | √    | √   |     |        |
 | NMS                          | √   | √    | √   |     | √      |
-| NMSRotated                   | √   | √    |     |     | √      |
+| NMSRotated                   | √   | √    |     |     |        |
 | NMSQuadri                    | √   | √    |     |     |        |
 | PixelGroup                   | √   |      |     |     |        |
 | PointsInBoxes                | √   | √    |     |     |        |
@@ -58,9 +58,6 @@ MMCV 提供了检测、分割等任务中常用的算子
 | ThreeNN                      |     | √    | √   |     |        |
 | TINShift                     |     | √    | √   |     |        |
 | UpFirDn2d                    |     | √    |     |     |        |
-| Voxelization                 | √   | √    |     |     | √      |
+| Voxelization                 | √   | √    | √   |     |        |
 | PrRoIPool                    |     | √    |     |     |        |
-| BezierAlign                  | √   | √    |     |     |        |
-| BiasAct                      |     | √    |     |     |        |
-| FilteredLrelu                |     | √    |     |     |        |
-| Conv2dGradfix                |     | √    |     |     |        |
+| NeighborhoodAttention        |     | √    |     |     |        |

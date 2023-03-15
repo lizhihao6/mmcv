@@ -3,12 +3,13 @@ import math
 from typing import Tuple, Union
 
 import torch
-from mmengine.registry import MODELS
 from torch import nn
 from torch.nn import functional as F
 
+from .registry import CONV_LAYERS
 
-@MODELS.register_module()
+
+@CONV_LAYERS.register_module()
 class Conv2dAdaptivePadding(nn.Conv2d):
     """Implementation of 2D convolution in tensorflow with `padding` as "same",
     which applies padding to input (if needed) so that input image gets fully

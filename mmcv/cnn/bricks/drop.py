@@ -3,7 +3,9 @@ from typing import Any, Dict, Optional
 
 import torch
 import torch.nn as nn
-from mmengine.registry import MODELS
+
+from mmcv import build_from_cfg
+from .registry import DROPOUT_LAYERS
 
 
 def drop_path(x: torch.Tensor,
@@ -26,7 +28,7 @@ def drop_path(x: torch.Tensor,
     return output
 
 
-@MODELS.register_module()
+@DROPOUT_LAYERS.register_module()
 class DropPath(nn.Module):
     """Drop paths (Stochastic Depth) per sample  (when applied in main path of
     residual blocks).
@@ -46,7 +48,7 @@ class DropPath(nn.Module):
         return drop_path(x, self.drop_prob, self.training)
 
 
-@MODELS.register_module()
+@DROPOUT_LAYERS.register_module()
 class Dropout(nn.Dropout):
     """A wrapper for ``torch.nn.Dropout``, We rename the ``p`` of
     ``torch.nn.Dropout`` to ``drop_prob`` so as to be consistent with
@@ -64,4 +66,4 @@ class Dropout(nn.Dropout):
 
 def build_dropout(cfg: Dict, default_args: Optional[Dict] = None) -> Any:
     """Builder for drop out layers."""
-    return MODELS.build(cfg, default_args=default_args)
+    return build_from_cfg(cfg, DROPOUT_LAYERS, default_args)

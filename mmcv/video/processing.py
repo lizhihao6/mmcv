@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 from typing import List, Optional, Union
 
-from mmengine.utils import requires_executable
+from mmcv.utils import requires_executable
 
 
 @requires_executable('ffmpeg')

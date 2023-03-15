@@ -9,8 +9,9 @@ import math
 
 import torch
 import torch.nn as nn
-from mmengine.registry import MODELS
 from torch.nn.modules.utils import _pair, _triple
+
+from .registry import CONV_LAYERS, UPSAMPLE_LAYERS
 
 if torch.__version__ == 'parrots':
     TORCH_VERSION = torch.__version__
@@ -37,7 +38,7 @@ class NewEmptyTensorOp(torch.autograd.Function):
         return NewEmptyTensorOp.apply(grad, shape), None
 
 
-@MODELS.register_module('Conv', force=True)
+@CONV_LAYERS.register_module('Conv', force=True)
 class Conv2d(nn.Conv2d):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -58,7 +59,7 @@ class Conv2d(nn.Conv2d):
         return super().forward(x)
 
 
-@MODELS.register_module('Conv3d', force=True)
+@CONV_LAYERS.register_module('Conv3d', force=True)
 class Conv3d(nn.Conv3d):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -79,8 +80,9 @@ class Conv3d(nn.Conv3d):
         return super().forward(x)
 
 
-@MODELS.register_module()
-@MODELS.register_module('deconv')
+@CONV_LAYERS.register_module()
+@CONV_LAYERS.register_module('deconv')
+@UPSAMPLE_LAYERS.register_module('deconv', force=True)
 class ConvTranspose2d(nn.ConvTranspose2d):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -101,8 +103,9 @@ class ConvTranspose2d(nn.ConvTranspose2d):
         return super().forward(x)
 
 
-@MODELS.register_module()
-@MODELS.register_module('deconv3d')
+@CONV_LAYERS.register_module()
+@CONV_LAYERS.register_module('deconv3d')
+@UPSAMPLE_LAYERS.register_module('deconv3d', force=True)
 class ConvTranspose3d(nn.ConvTranspose3d):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
