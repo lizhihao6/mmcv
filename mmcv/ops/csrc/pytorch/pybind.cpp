@@ -480,6 +480,15 @@ Tensor nattenqkrpb_forward(const Tensor query, const Tensor key,
 
 std::vector<Tensor> nattenqkrpb_backward(const Tensor grad_output,
                                          const Tensor query, const Tensor key);
+py::bytes rans_encode_with_indexes(const Tensor symbols, const Tensor indexes,
+                                   const Tensor cdfs, const Tensor cdfs_sizes,
+                                   const Tensor offsets, int num_threads);
+Tensor rans_decode_with_indexes(const std::string &encoded,
+                                const Tensor indexes, const Tensor cdfs,
+                                const Tensor cdfs_sizes, const Tensor offsets);
+
+Tensor pmf_to_quantized_cdf(const Tensor pmfs, const Tensor pmf_lengths,
+                            const Tensor tail_masses);
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("upfirdn2d", &upfirdn2d, "upfirdn2d (CUDA)", py::arg("input"),
@@ -966,4 +975,14 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
         py::arg("query"), py::arg("key"), py::arg("rpb"));
   m.def("nattenqkrpb_backward", &nattenqkrpb_backward, "nattenqkrpb_backward",
         py::arg("grad_output"), py::arg("query"), py::arg("key"));
+  m.def("rans_encode_with_indexes", &rans_encode_with_indexes,
+        "rans encode using indexes", py::arg("symbols"), py::arg("indexes"),
+        py::arg("cdfs"), py::arg("cdfs_sizes"), py::arg("offsets"),
+        py::arg("num_threads"));
+  m.def("rans_decode_with_indexes", &rans_decode_with_indexes,
+        "rans decode using indexes", py::arg("encoded"), py::arg("indexes"),
+        py::arg("cdfs"), py::arg("cdfs_sizes"), py::arg("offsets"));
+  m.def("pmf_to_quantized_cdf", &pmf_to_quantized_cdf,
+        "convert pmf in to quantized cdf", py::arg("pmfs"),
+        py::arg("pmf_lengths"), py::arg("tail_masses"));
 }
